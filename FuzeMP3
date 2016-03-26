@@ -1,0 +1,85 @@
+from tkinter import *
+from tkinter.filedialog import *
+import pygame
+import pygame._view
+
+pygame.init()
+pygame.mixer.init()
+
+#définition qui va permettre à l'utilisateur de choisir la musique à jouer.
+
+def OpenFile():
+    zic = askopenfilename(title = "Choisir une musique") #commande de l'explorateur de fichier.
+    pygame.mixer.music.load(zic) #module pygame qui va lire et jouer la musique.
+    listbox.delete (1, END)
+    listbox.insert(END, zic)
+
+#définition qui permet la modification du volume.
+
+def Vol(_=None):
+    pygame.mixer.music.set_volume(BoutonVolume.get())
+
+#Fenêtre principale du programme
+        
+fenetre = Tk()
+
+#Listbox qui va afficher la muqique joué.
+
+listbox = Listbox(fenetre, width = 500, height = -10, bg = "#4e026e", fg = "white")
+listbox.insert(0, "PLAYLIST: ")
+listbox.pack(anchor = NW)
+
+fenetre.title("FuzeMP3 V1")
+
+fenetre.geometry("500x300+400+250")
+
+#Images qui composent le programme.
+
+Photo = PhotoImage(file = "logo.gif")
+Photo1 = PhotoImage(file = "pause.gif")
+Photo2 = PhotoImage(file = "play.gif")
+Photo3 = PhotoImage(file = "reload.gif")
+
+#Image principale du lecteur de musique.
+    
+canvas = Canvas(fenetre, width = 500, height = 300)
+canvas.create_image(250, 150, image = Photo)
+canvas.pack()
+
+#Définition de tous les boutons composants le programme.
+    
+Explorateur = Button(fenetre, text = "         Choisir la musique...          ", command = OpenFile, cursor = "trek",
+bg = "#800000", relief = FLAT, fg = "white").place(x = 10, y = 200)
+
+MusiquePause = Button(fenetre, command = pygame.mixer.music.pause, cursor = "trek", image = Photo1,
+bg = "black", relief = FLAT).place(x = 10, y = 230)
+
+LancerMusique = Button(fenetre, text = "Lancer la musique", command = pygame.mixer.music.play , cursor = "trek",
+fg = "white", bg = "#800000", relief = FLAT).place(x = 380, y = 260)
+
+Unpause = Button(fenetre, command =  pygame.mixer.music.unpause , cursor = "trek",
+image = Photo2, bg = "black", relief = FLAT).place(x = 70, y = 230)
+
+CouperMusique = Button(fenetre, text = "Arreter la musique", command = pygame.mixer.music.stop, cursor = "trek",fg = "white",
+bg = "#800000", relief = FLAT).place(x =380, y = 233)
+
+Reload = Button(fenetre, command =  pygame.mixer.music.play, cursor = "trek", image = Photo3,
+bg = "black", relief = FLAT).place(x = 130, y = 230)
+
+#Bouton qui permet le réglage du volume.
+    
+BoutonVolume = Scale(fenetre, from_=1, to=0, resolution = 0.01, command = Vol, cursor = "trek", bg = "#800000",
+fg = "white", relief = FLAT)
+BoutonVolume.set(0.50)
+BoutonVolume.place(x = 450, y = 100)
+
+
+#Icône du programme.
+    
+fenetre.iconbitmap("fusee.ico")
+
+#On empêche l'utilisateur de changer les dimensions de lecteur.
+
+fenetre.resizable(width = False, height = False)
+    
+fenetre.mainloop()
